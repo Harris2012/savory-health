@@ -24,8 +24,6 @@ public class HealthFilter implements Filter {
         apiServlet.init();
         staticResourceServlet = new StaticResourceServlet();
         staticResourceServlet.init();
-
-        System.out.println("HealthFilter.init() is called.");
     }
 
     @Override

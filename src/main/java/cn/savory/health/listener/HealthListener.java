@@ -19,7 +19,7 @@ public class HealthListener implements ServletContextListener {
 
         FilterRegistration.Dynamic filterRegistration = sce.getServletContext().addFilter("healthFilter", HealthFilter.class);
 
-        filterRegistration.addMappingForUrlPatterns(null, false, "/*");
+        filterRegistration.addMappingForUrlPatterns(null, false, "/health/*");
     }
 
     @Override

@@ -1,10 +1,66 @@
 package cn.savory.health.servlet;
 
+import cn.savory.health.controller.UserController;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author hc_zhang
  * @date 2018/6/20.
  */
 public class ApiServlet extends HttpServlet {
+
+    private final static Gson GSON = new GsonBuilder().create();
+    private final static Charset CHARSET = Charset.forName("UTF-8");
+
+    private UserController userController;
+
+    public ApiServlet() {
+        userController = new UserController();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        process(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        process(req, resp);
+    }
+
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String path = request.getServletPath().substring(11);
+
+        switch (path) {
+            case "/user/profile": {
+
+                userController.profile(request, response);
+            }
+            return;
+
+            default: {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
+            break;
+        }
+    }
+
+    private void setResponse(HttpServletResponse response, byte[] bytes) throws IOException {
+
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getOutputStream().write(bytes);
+        response.getOutputStream().close();
+    }
 }
