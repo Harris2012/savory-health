@@ -34,6 +34,10 @@ import com.sun.management.OperatingSystemMXBean;
 /**
  * @author @author code_czp@126.com-2015年5月12日
  */
+
+https://github.com/coderczp/jmonitor
+
+
 public class JMConnManager implements NotificationListener {
 
     public static final String GCCMS = "java.lang:type=GarbageCollector,name=ConcurrentMarkSweep";
