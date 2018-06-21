@@ -1,6 +1,5 @@
 package cn.savory.health.controller;
 
-import cn.savory.health.servlet.ApiServlet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,12 +18,9 @@ public abstract class ControllerBase {
 
     protected void setResponse(HttpServletResponse response, Object item) throws IOException {
 
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
         response.setStatus(HttpServletResponse.SC_OK);
 
         if (item instanceof String) {
-
             response.setContentType("text/plain");
             response.getOutputStream().write(((String) item).getBytes(CHARSET));
             response.getOutputStream().close();
@@ -32,7 +28,8 @@ public abstract class ControllerBase {
         }
 
         String content = GSON.toJson(item);
-        setResponse(response, content.getBytes(CHARSET));
+        response.setContentType("application/json;charset=UTF-8");
+        response.getOutputStream().write(content.getBytes(CHARSET));
         response.getOutputStream().close();
     }
 }

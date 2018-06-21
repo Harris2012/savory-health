@@ -22,7 +22,8 @@ public class UserController extends ControllerBase {
 
         UserProfileResponse response = new UserProfileResponse();
 
-        response.setName("张三");
+        response.setUserName("张三");
+        response.setStatusCode(1);
 
         return response;
     }

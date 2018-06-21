@@ -4,15 +4,15 @@ package cn.savory.health.controller.response;
  * @author hc_zhang
  * @date 2018/6/21.
  */
-public class UserProfileResponse {
+public class UserProfileResponse extends ResponseBase {
 
-    private String name;
+    private String userName;
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

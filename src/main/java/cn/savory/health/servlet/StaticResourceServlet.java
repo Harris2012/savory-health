@@ -65,8 +65,6 @@ public class StaticResourceServlet extends HttpServlet {
 
     private void setResponse(HttpServletResponse response, String mimeType, byte[] bytes) throws IOException {
 
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
         response.setContentType(mimeType);
         response.setStatus(HttpServletResponse.SC_OK);
         response.getOutputStream().write(bytes);

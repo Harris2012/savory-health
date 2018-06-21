@@ -40,27 +40,16 @@ public class ApiServlet extends HttpServlet {
 
         String path = request.getServletPath().substring(11);
 
-        switch (path) {
+        switch (path.toLowerCase()) {
             case "/user/profile": {
-
                 userController.profile(request, response);
             }
-            return;
+            break;
 
             default: {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
             break;
         }
-    }
-
-    private void setResponse(HttpServletResponse response, byte[] bytes) throws IOException {
-
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().close();
     }
 }
