@@ -1,5 +1,6 @@
 package cn.savory.health.servlet;
 
+import cn.savory.health.controller.JavaController;
 import cn.savory.health.controller.UserController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,9 +22,11 @@ public class ApiServlet extends HttpServlet {
     private final static Charset CHARSET = Charset.forName("UTF-8");
 
     private UserController userController;
+    private JavaController javaController;
 
     public ApiServlet() {
         userController = new UserController();
+        javaController = new JavaController();
     }
 
     @Override
@@ -43,6 +46,11 @@ public class ApiServlet extends HttpServlet {
         switch (path.toLowerCase()) {
             case "/user/profile": {
                 userController.profile(request, response);
+            }
+            break;
+
+            case "/java/checkdeadlock": {
+                javaController.checkDeadLock(request, response);
             }
             break;
 

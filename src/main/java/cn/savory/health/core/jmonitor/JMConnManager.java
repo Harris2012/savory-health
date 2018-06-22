@@ -1,16 +1,11 @@
 package cn.savory.health.core.jmonitor;
 
-import java.io.IOException;
-import java.lang.management.ClassLoadingMXBean;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.RuntimeMXBean;
-import java.lang.management.ThreadMXBean;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import cn.savory.health.core.event.JMEevntCenter;
+import com.google.common.collect.Maps;
+import com.sun.management.HotSpotDiagnosticMXBean;
+import com.sun.management.OperatingSystemMXBean;
 
+import javax.management.ListenerNotFoundException;
 import javax.management.MBeanServerConnection;
 import javax.management.Notification;
 import javax.management.NotificationListener;
@@ -18,24 +13,18 @@ import javax.management.remote.JMXConnectionNotification;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-
-import cn.savory.health.core.event.JMEevntCenter;
-import com.google.common.collect.Maps;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.nice.common.event.JMEevntCenter;
-import com.nice.common.util.JMJSonCfgLoader;
-import com.sun.management.HotSpotDiagnosticMXBean;
-import com.sun.management.OperatingSystemMXBean;
+import java.io.IOException;
+import java.lang.management.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author @author code_czp@126.com-2015年5月12日
  */
 
-https://github.com/coderczp/jmonitor
+//https://github.com/coderczp/jmonitor
 
 
 public class JMConnManager implements NotificationListener {
@@ -55,7 +44,7 @@ public class JMConnManager implements NotificationListener {
     private static final String CLSBEANAME = "java.lang:type=ClassLoading";
     public static final String THREAD_BEAN_NAME = "java.lang:type=Threading";
     public static final String MEMORYNAME = "java.lang:type=Memory";
-    public static final String JMONITOR = "JMonitor";
+    //public static final String JMONITOR = "JMonitor";
     private static ConcurrentHashMap<String, JMConnBean> conns = new ConcurrentHashMap<String, JMConnBean>();
     private static final NotificationListener INSTANCE = new JMConnManager();
 
@@ -73,12 +62,11 @@ public class JMConnManager implements NotificationListener {
     }
 
     public static void init(String cfgPath) {
-        Map<String, String> cfg = JMJSonCfgLoader.loadConfig(cfgPath);
-        JSONArray apps = cfg.getJSONArray("apps");
-        for (int i = 0; i < apps.size(); i++) {
-            JSONObject one = apps.getJSONObject(i);
-            addConnInfo(JSONObject.toJavaObject(one, JMConnBean.class));
-        }
+        JMConnBean bean = new JMConnBean();
+        bean.setHost("127.0.0.1");
+        bean.setPort(1099);
+        bean.setName("JMonitor");
+        addConnInfo(bean);
     }
 
     public static <T> T getServer(String app, String beanBane, Class<T> cls) throws IOException {
@@ -107,21 +95,21 @@ public class JMConnManager implements NotificationListener {
     }
 
     public static MBeanServerConnection getConn(String app) throws IOException {
-        if (app.equals(JMONITOR))
+
             return ManagementFactory.getPlatformMBeanServer();
 
-        JMConnBean bean = conns.get(app);
-        if (bean == null)
-            throw new RuntimeException(app + ":disconnected");
-
-        if (bean.getConnector() == null) {
-            synchronized (JMConnManager.class) {
-                if (bean.getConnector() == null) {
-                    bean.setConnector(getConnection(bean));
-                }
-            }
-        }
-        return bean.getConnector().getMBeanServerConnection();
+//        JMConnBean bean = conns.get(app);
+//        if (bean == null)
+//            throw new RuntimeException(app + ":disconnected");
+//
+//        if (bean.getConnector() == null) {
+//            synchronized (JMConnManager.class) {
+//                if (bean.getConnector() == null) {
+//                    bean.setConnector(getConnection(bean));
+//                }
+//            }
+//        }
+//        return bean.getConnector().getMBeanServerConnection();
     }
 
     public static boolean isLocalHost(String ip) {
@@ -135,7 +123,7 @@ public class JMConnManager implements NotificationListener {
                 JMXConnector conn = bean.getConnector();
                 conn.close();
             } catch (IOException e) {
-                log.error("close error:" + e);
+                e.printStackTrace();
             }
         }
     }
@@ -164,27 +152,31 @@ public class JMConnManager implements NotificationListener {
     @Override
     public void handleNotification(Notification notification, Object handback) {
         JMXConnectionNotification noti = (JMXConnectionNotification) notification;
-        if (noti.getType().equals(JMXConnectionNotification.CLOSED)) {
-            disconnect(String.valueOf(handback));
-        } else if (noti.getType().equals(JMXConnectionNotification.FAILED)) {
-            disconnect(String.valueOf(handback));
-        } else if (noti.getType().equals(JMXConnectionNotification.NOTIFS_LOST)) {
-            disconnect(String.valueOf(handback));
+
+        try {
+            if (noti.getType().equals(JMXConnectionNotification.CLOSED)) {
+                disconnect(String.valueOf(handback));
+            } else if (noti.getType().equals(JMXConnectionNotification.FAILED)) {
+                disconnect(String.valueOf(handback));
+            } else if (noti.getType().equals(JMXConnectionNotification.NOTIFS_LOST)) {
+                disconnect(String.valueOf(handback));
+            }
+        } catch (ListenerNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static void disconnect(String app) {
-        try {
-            JMConnBean jmConnBean = conns.remove(app);
-            JSONObject quit = new JSONObject();
-            quit.put("type", "quit");
-            quit.put("app", app);
-            JMEevntCenter.getInstance().send(quit);
-            JMXConnector conn = jmConnBean.getConnector();
-            conn.removeConnectionNotificationListener(INSTANCE);
-            conn.close();
-        } catch (Exception e) {
-            log.error("disconnect error:" + e);
-        }
+    private static void disconnect(String app) throws ListenerNotFoundException, IOException {
+
+        JMConnBean jmConnBean = conns.remove(app);
+        Map<String, String> quit = Maps.newHashMap();
+        quit.put("type", "quit");
+        quit.put("app", app);
+        JMEevntCenter.getInstance().send(quit);
+        JMXConnector conn = jmConnBean.getConnector();
+        conn.removeConnectionNotificationListener(INSTANCE);
+        conn.close();
     }
 }
