@@ -18,33 +18,6 @@ public class JMServer {
 
 
 //
-//    @HttpMapping(url = "/dumpThead")
-//    public void doDumpThread(Map<String, Object> param) {
-//        try {
-//            HttpServletRequest req = (HttpServletRequest) param.get(JMDispatcher.REQ);
-//            HttpServletResponse resp = (HttpServletResponse) param.get(JMDispatcher.RESP);
-//            String app = req.getParameter("app");
-//            String threadId = req.getParameter("threadId");
-//            ThreadMXBean tBean = JMConnManager.getThreadMBean(app);
-//            Map<String, String> data = new Map<String, String>();
-//            if (threadId != null) {
-//                Long id = Long.valueOf(threadId);
-//                ThreadInfo threadInfo = tBean.getThreadInfo(id, Integer.MAX_VALUE);
-//                data.put("info", threadInfo.toString());
-//            } else {
-//                ThreadInfo[] dumpAllThreads = tBean.dumpAllThreads(false, false);
-//                StringBuffer info = new StringBuffer();
-//                for (ThreadInfo threadInfo : dumpAllThreads) {
-//                    info.append("\n").append(threadInfo);
-//                }
-//                data.put("info", info);
-//            }
-//            writeFile(req, resp, data);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
 //    @HttpMapping(url = "/loadRuntimeInfo")
 //    public Map<String, String> doLoadRuntimeInfo(Map<String, Object> param) {
 //        try {

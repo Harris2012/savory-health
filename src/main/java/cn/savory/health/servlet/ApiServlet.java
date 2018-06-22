@@ -31,15 +31,27 @@ public class ApiServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        process(req, resp);
+        try {
+            process(req, resp);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        process(req, resp);
+        try {
+            process(req, resp);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException, InstantiationException {
 
         String path = request.getServletPath().substring(11);
 
@@ -56,6 +68,11 @@ public class ApiServlet extends HttpServlet {
 
             case "/java/loadthreadinfo": {
                 javaController.loadThreadInfo(request, response);
+            }
+            break;
+
+            case "/java/dumpthread": {
+                javaController.dumpThread(request, response);
             }
             break;
 

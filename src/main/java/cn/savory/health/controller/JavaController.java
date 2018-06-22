@@ -1,8 +1,10 @@
 package cn.savory.health.controller;
 
 import cn.savory.health.controller.request.CheckDeadLockRequest;
+import cn.savory.health.controller.request.DumpThreadRequest;
 import cn.savory.health.controller.request.LoadThreadInfoRequest;
 import cn.savory.health.controller.response.CheckDeadLockResponse;
+import cn.savory.health.controller.response.DumpThreadResponse;
 import cn.savory.health.controller.response.LoadThreadInfoResponse;
 import cn.savory.health.controller.vo.ThreadInfoVo;
 import cn.savory.health.core.jmonitor.JMConnManager;
@@ -14,11 +16,13 @@ import com.google.gson.Gson;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,6 +41,19 @@ public class JavaController extends ControllerBase {
     public void loadThreadInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         setResponse(response, loadThreadInfo(null));
+    }
+
+    public void dumpThread(HttpServletRequest request, HttpServletResponse response) throws IOException, InstantiationException, IllegalAccessException {
+
+        DumpThreadRequest dumpThreadRequest = parseRequest(request, DumpThreadRequest.class);
+
+        DumpThreadResponse dumpThreadResponse = dumpThread(dumpThreadRequest);
+
+        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        String dateString = dateFormat.format(new Date()).replaceAll("\\D", "_");
+        String fileName = String.format("%s.threaddump", dateString);
+
+        setFileResponse(response, fileName, dumpThreadResponse.getInfo());
     }
 
     private CheckDeadLockResponse checkDeadLock(CheckDeadLockRequest request) throws IOException {
@@ -97,6 +114,27 @@ public class JavaController extends ControllerBase {
         }
         response.setStateMap(stateMap);
         response.setThreadInfoList(threadInfoVoList);
+
+        return response;
+    }
+
+    public DumpThreadResponse dumpThread(DumpThreadRequest request) throws IOException {
+
+        DumpThreadResponse response = new DumpThreadResponse();
+
+        ThreadMXBean tBean = JMConnManager.getThreadMBean("jmonitor");
+        if (request.getThreadId() > 0) {
+            ThreadInfo threadInfo = tBean.getThreadInfo(request.getThreadId(), Integer.MAX_VALUE);
+            response.setInfo(threadInfo.toString());
+        } else {
+            StringBuffer stringBuffer = new StringBuffer();
+
+            ThreadInfo[] dumpAllThreads = tBean.dumpAllThreads(false, false);
+            for (ThreadInfo threadInfo : dumpAllThreads) {
+                stringBuffer.append("\n").append(threadInfo);
+            }
+            response.setInfo(stringBuffer.toString());
+        }
 
         return response;
     }
