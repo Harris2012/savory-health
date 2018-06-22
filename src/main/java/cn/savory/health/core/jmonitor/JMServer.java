@@ -16,47 +16,7 @@ public class JMServer {
 
 
 
-//    @HttpMapping(url = "/loadThreadInfo")
-//    public Map<String, String> doLoadThreadInfo(Map<String, Object> param) {
-//        try {
-//            String app = ((HttpServletRequest) param.get(JMDispatcher.REQ)).getParameter("app");
-//            ThreadMXBean tBean = JMConnManager.getThreadMBean(app);
-//            ThreadInfo[] allThreads = tBean.dumpAllThreads(false, false);
-//
-//            Map<String, String> root = new Map<String, String>();
-//            JSONArray detail = new JSONArray();
-//            HashMap<State, Integer> state = new HashMap<State, Integer>();
-//            for (ThreadInfo info : allThreads) {
-//                Map<String, String> th = new Map<String, String>();
-//                long threadId = info.getThreadId();
-//                long cpu = tBean.getThreadCpuTime(threadId);
-//                State tState = info.getThreadState();
-//
-//                th.put("id", threadId);
-//                th.put("state", tState);
-//                th.put("name", info.getThreadName());
-//                th.put("cpu", TimeUnit.NANOSECONDS.toMillis(cpu));
-//                detail.add(th);
-//
-//                Integer vl = state.get(tState);
-//                if (vl == null) {
-//                    state.put(tState, 0);
-//                } else {
-//                    state.put(tState, vl + 1);
-//                }
-//            }
-//
-//            root.put("state", state);
-//            root.put("detail", detail);
-//            root.put("total", tBean.getThreadCount());
-//            root.put("time", System.currentTimeMillis());
-//            root.put("deamon", tBean.getDaemonThreadCount());
-//
-//            return root;
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 //
 //    @HttpMapping(url = "/dumpThead")
 //    public void doDumpThread(Map<String, Object> param) {

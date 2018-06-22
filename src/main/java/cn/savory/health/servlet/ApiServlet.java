@@ -54,6 +54,11 @@ public class ApiServlet extends HttpServlet {
             }
             break;
 
+            case "/java/loadthreadinfo": {
+                javaController.loadThreadInfo(request, response);
+            }
+            break;
+
             default: {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
