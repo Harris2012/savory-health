@@ -1,19 +1,16 @@
 package cn.savory.health.controller;
 
-import cn.savory.health.controller.request.CheckDeadLockRequest;
-import cn.savory.health.controller.request.DumpThreadRequest;
-import cn.savory.health.controller.request.LoadRuntimeInfoRequest;
-import cn.savory.health.controller.request.LoadThreadInfoRequest;
-import cn.savory.health.controller.response.CheckDeadLockResponse;
-import cn.savory.health.controller.response.DumpThreadResponse;
-import cn.savory.health.controller.response.LoadRuntimeInfoResponse;
-import cn.savory.health.controller.response.LoadThreadInfoResponse;
+import cn.savory.health.controller.request.*;
+import cn.savory.health.controller.response.*;
 import cn.savory.health.controller.vo.ThreadInfoVo;
+import cn.savory.health.core.jmonitor.JMConnBean;
 import cn.savory.health.core.jmonitor.JMConnManager;
 import com.google.common.collect.Lists;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.RuntimeMXBean;
@@ -57,6 +54,16 @@ public class JavaController extends ControllerBase {
     public void loadRuntimeInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         setResponse(response, loadRuntimeInfo(null));
+    }
+
+    public void gc(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        setResponse(response, gc(null));
+    }
+
+    public void heapDump(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        setResponse(response, heapDump(null, request));
     }
 
     private CheckDeadLockResponse checkDeadLock(CheckDeadLockRequest request) throws IOException {
@@ -157,6 +164,41 @@ public class JavaController extends ControllerBase {
         response.setClassLoadedNow(classLoadingMXBean.getLoadedClassCount());
         response.setClassLoadedAll(classLoadingMXBean.getTotalLoadedClassCount());
         response.setClassUnloadedAll(classLoadingMXBean.getUnloadedClassCount());
+
+        response.setStatusCode(1);
+        return response;
+    }
+
+    private GCResponse gc(GCRequest request) throws IOException {
+
+        GCResponse response = new GCResponse();
+
+        JMConnManager.getMemoryMBean("jmonitor").gc();
+
+        response.setStatusCode(1);
+        return response;
+    }
+
+    private HeapDumpResponse heapDump(HeapDumpRequest request, HttpServletRequest httpServletRequest) throws IOException {
+
+        HeapDumpResponse response = new HeapDumpResponse();
+
+        JMConnBean bean = JMConnManager.getApps().get("jmonitor");
+
+        DateFormat fmt = DateFormat.getDateTimeInstance();
+        String date = fmt.format(new Date()).replaceAll("\\D", "_");
+
+        String filePath = httpServletRequest.getServletContext().getRealPath(httpServletRequest.getRequestURI());
+
+        File root = new File(filePath);
+        String dir = root.getParentFile().getParent();
+        File file = new File(String.format("%s/dump/%s_%s_heap.hprof", dir, "jmonitor", date));
+        file.getParentFile().mkdirs();
+        String dumpFile = file.getAbsolutePath();
+        JMConnManager.getHotspotBean("jmonitor").dumpHeap(dumpFile, false);
+
+        String fileX = String.format("./dump/%s", file.getName());
+        System.out.println(fileX);
 
         return response;
     }

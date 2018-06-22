@@ -81,6 +81,16 @@ public class ApiServlet extends HttpServlet {
             }
             break;
 
+            case "/java/gc": {
+                javaController.gc(request, response);
+            }
+            break;
+
+            case "/java/heapdump": {
+                javaController.heapDump(request, response);
+            }
+            break;
+
             default: {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }

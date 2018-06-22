@@ -15,67 +15,6 @@ import java.util.Map;
 public class JMServer {
 
 
-
-
-
-//
-//    @HttpMapping(url = "/doGC")
-//    public String doVMGC(Map<String, Object> param) {
-//        try {
-//            String app = ((HttpServletRequest) param.get(JMDispatcher.REQ)).getParameter("app");
-//            JMConnManager.getMemoryMBean(app).gc();
-//            return "success";
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    @HttpMapping(url = "/doHeapDump")
-//    public Map<String, String> doHeapDump(Map<String, Object> param) {
-//        try {
-//            HttpServletRequest req = (HttpServletRequest) param.get(JMDispatcher.REQ);
-//            String app = req.getParameter("app");
-//            JMConnBean bean = JMConnManager.getApps().get(app);
-//            String host = bean.getHost();
-//            boolean islocal = JMConnManager.isLocalHost(host);
-//            DateFormat fmt = DateFormat.getDateTimeInstance();
-//            String date = fmt.format(new Date()).replaceAll("\\D", "_");
-//            if (islocal) {
-//                return doLocalDump(req, app, date);
-//            }
-//            return doRemoteDump(app, date, host);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    private Map<String, String> doRemoteDump(String app, String date, String host) throws IOException {
-//        RuntimeMXBean mBean = JMConnManager.getRuntimeMBean(app);
-//        String dir = mBean.getSystemProperties().get("user.dir");
-//        String dumpFile = String.format("%s/%s_%s_heap.hprof", dir, app, date);
-//        JMConnManager.getHotspotBean(app).dumpHeap(dumpFile, false);
-//
-//        Map<String, String> res = new Map<String, String>();
-//        res.put("file", host + ":" + dumpFile);
-//        res.put("local", false);
-//        return res;
-//    }
-//
-//    @SuppressWarnings("deprecation")
-//    private Map<String, String> doLocalDump(HttpServletRequest req, String app, String date) throws IOException {
-//        File root = new File(req.getRealPath(req.getRequestURI()));
-//        String dir = root.getParentFile().getParent();
-//        File file = new File(String.format("%s/dump/%s_%s_heap.hprof", dir, app, date));
-//        file.getParentFile().mkdirs();
-//        String dumpFile = file.getAbsolutePath();
-//        JMConnManager.getHotspotBean(app).dumpHeap(dumpFile, false);
-//
-//        Map<String, String> res = new Map<String, String>();
-//        res.put("local", true);
-//        res.put("file", String.format("./dump/%s", file.getName()));
-//
-//        return res;
-//    }
 //
 //    @HttpMapping(url = "/loadMonitorData")
 //    public Map<String, String> doLoadMonitorData(Map<String, Object> param) {
@@ -210,20 +149,5 @@ public class JMServer {
 //        item.put("max", useage.getMax());
 //        return item;
 //    }
-//
-//    private void writeFile(HttpServletRequest req, HttpServletResponse resp, Map<String, String> rtInfo) {
-//        try {
-//            String javaApp = req.getParameter("app");
-//            DateFormat fmt = DateFormat.getDateTimeInstance();
-//            String dateStr = fmt.format(new Date()).replaceAll("\\D", "_");
-//            String fileName = String.format("%s-%s.threaddump", javaApp, dateStr);
-//            resp.setHeader("content-disposition", "attachment; filename=" + fileName);
-//            PrintWriter out = resp.getWriter();
-//            out.print(rtInfo.get("info"));
-//            out.flush();
-//            out.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 }
