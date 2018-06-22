@@ -2,25 +2,23 @@ package cn.savory.health.controller;
 
 import cn.savory.health.controller.request.CheckDeadLockRequest;
 import cn.savory.health.controller.request.DumpThreadRequest;
+import cn.savory.health.controller.request.LoadRuntimeInfoRequest;
 import cn.savory.health.controller.request.LoadThreadInfoRequest;
 import cn.savory.health.controller.response.CheckDeadLockResponse;
 import cn.savory.health.controller.response.DumpThreadResponse;
+import cn.savory.health.controller.response.LoadRuntimeInfoResponse;
 import cn.savory.health.controller.response.LoadThreadInfoResponse;
 import cn.savory.health.controller.vo.ThreadInfoVo;
 import cn.savory.health.core.jmonitor.JMConnManager;
-import cn.savory.health.core.jmonitor.JMServer;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +52,11 @@ public class JavaController extends ControllerBase {
         String fileName = String.format("%s.threaddump", dateString);
 
         setFileResponse(response, fileName, dumpThreadResponse.getInfo());
+    }
+
+    public void loadRuntimeInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        setResponse(response, loadRuntimeInfo(null));
     }
 
     private CheckDeadLockResponse checkDeadLock(CheckDeadLockRequest request) throws IOException {
@@ -138,4 +141,24 @@ public class JavaController extends ControllerBase {
 
         return response;
     }
+
+    private LoadRuntimeInfoResponse loadRuntimeInfo(LoadRuntimeInfoRequest request) throws IOException {
+
+        LoadRuntimeInfoResponse response = new LoadRuntimeInfoResponse();
+
+        RuntimeMXBean runtimeMXBean = JMConnManager.getRuntimeMBean("jmonitor");
+        ClassLoadingMXBean classLoadingMXBean = JMConnManager.getClassMbean("jmonitor");
+        Map<String, String> props = runtimeMXBean.getSystemProperties();
+        DateFormat format = DateFormat.getInstance();
+
+        response.setApppId(runtimeMXBean.getName());
+        response.setStartParam(runtimeMXBean.getInputArguments());
+        response.setStartTime(format.format(new Date(runtimeMXBean.getStartTime())));
+        response.setClassLoadedNow(classLoadingMXBean.getLoadedClassCount());
+        response.setClassLoadedAll(classLoadingMXBean.getTotalLoadedClassCount());
+        response.setClassUnloadedAll(classLoadingMXBean.getUnloadedClassCount());
+
+        return response;
+    }
 }
+

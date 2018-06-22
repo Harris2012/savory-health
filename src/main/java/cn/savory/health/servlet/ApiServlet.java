@@ -76,6 +76,11 @@ public class ApiServlet extends HttpServlet {
             }
             break;
 
+            case "/java/loadruntimeinfo": {
+                javaController.loadRuntimeInfo(request, response);
+            }
+            break;
+
             default: {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }

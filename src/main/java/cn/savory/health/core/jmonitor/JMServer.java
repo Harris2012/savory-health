@@ -17,35 +17,7 @@ public class JMServer {
 
 
 
-//
-//    @HttpMapping(url = "/loadRuntimeInfo")
-//    public Map<String, String> doLoadRuntimeInfo(Map<String, Object> param) {
-//        try {
-//            String app = ((HttpServletRequest) param.get(JMDispatcher.REQ)).getParameter("app");
-//            RuntimeMXBean mBean = JMConnManager.getRuntimeMBean(app);
-//            ClassLoadingMXBean cBean = JMConnManager.getClassMbean(app);
-//            Map<String, String> props = mBean.getSystemProperties();
-//            DateFormat format = DateFormat.getInstance();
-//            List<String> input = mBean.getInputArguments();
-//            Date date = new Date(mBean.getStartTime());
-//
-//            TreeMap<String, Object> data = new TreeMap<String, Object>();
-//
-//            data.put("apppid", mBean.getName());
-//            data.put("startparam", input.toString());
-//            data.put("starttime", format.format(date));
-//            data.put("classLoadedNow", cBean.getLoadedClassCount());
-//            data.put("classUnloadedAll", cBean.getUnloadedClassCount());
-//            data.put("classLoadedAll", cBean.getTotalLoadedClassCount());
-//            data.putAll(props);
-//
-//            Map<String, String> json = new Map<String, String>(true);
-//            json.putAll(data);
-//            return json;
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 //
 //    @HttpMapping(url = "/doGC")
 //    public String doVMGC(Map<String, Object> param) {
