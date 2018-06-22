@@ -44,7 +44,6 @@ public class JavaController extends ControllerBase {
         CheckDeadLockResponse response = new CheckDeadLockResponse();
 
         ThreadMXBean threadMXBean = JMConnManager.getThreadMBean("jmonitor");
-        Map<String, Object> json = Maps.newHashMap();
         long[] deadlockedThreads = threadMXBean.findDeadlockedThreads();
         if (deadlockedThreads == null || deadlockedThreads.length == 0) {
 
