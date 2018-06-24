@@ -43,10 +43,10 @@ public class StaticResourceServlet extends HttpServlet {
             setResponse(response, mimeType, bytes);
             return;
         }
-
-        InputStream inputStream = StaticResourceServlet.class.getClassLoader().getResourceAsStream("/static" + servletPath.substring(7));
+        String path = "/static" + servletPath.substring(7);
+        InputStream inputStream = StaticResourceServlet.class.getClassLoader().getResourceAsStream(path);
         if (inputStream != null) {
-
+            System.out.println("found = " + path);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(4096);
             byte[] buffer = new byte[4096];
             int length = 0;
@@ -58,6 +58,8 @@ public class StaticResourceServlet extends HttpServlet {
 
             setResponse(response, mimeType, bytes);
             return;
+        } else {
+            System.out.println("404   = " + path);
         }
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);

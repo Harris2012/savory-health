@@ -11,6 +11,7 @@ var route = function ($stateProvider, $urlRouterProvider) {
     });
 
     $stateProvider.state('app.welcome', { url: 'welcome', templateUrl: 'scripts/view/view_welcome.html?v=' + window.releaseNo });
+    $stateProvider.state('app.thread-list', { url: 'thread-list', templateUrl: 'scripts/view/view_thead_list.html?v=' + window.releaseNo, controller: ThreadListController });
 
     $stateProvider.state('app.otherwise', {
         url: '*path',

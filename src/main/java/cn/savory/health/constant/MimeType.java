@@ -18,7 +18,7 @@ public final class MimeType {
         MIMEMAP.put("css", "text/css");
         MIMEMAP.put("jpg", "image/jpeg");
         MIMEMAP.put("jpeg", "image/jpeg");
-        MIMEMAP.put("html", "text/html");
+        MIMEMAP.put("html", "text/html;charset=utf-8");
     }
 
     public static String get(String extension) {

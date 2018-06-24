@@ -1,0 +1,28 @@
+<ol class="breadcrumb">
+    <li><a ui-sref="app.welcome">首页</a></li>
+    <li class="active">线程列表</li>
+</ol>
+
+<div class="form-group" ng-show="loading">
+    <div class="col-sm-12">
+        <img src="images/loading.gif" />加载中，请稍后...
+    </div>
+</div>
+<table class="table" ng-show="!loading">
+    <thead>
+    <tr>
+        <th>threadId</th>
+        <th>threadName</th>
+        <th>threadState</th>
+        <th>threadCpuTime</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in threadInfoList">
+        <td>{{item.threadId}}</td>
+        <td>{{item.threadName}}</td>
+        <td>{{item.threadState}}</td>
+        <td>{{item.threadCpuTime}}</td>
+    </tr>
+    </tbody>
+</table>

@@ -125,6 +125,7 @@ public class JavaController extends ControllerBase {
         response.setStateMap(stateMap);
         response.setThreadInfoList(threadInfoVoList);
 
+        response.setStatusCode(1);
         return response;
     }
 
