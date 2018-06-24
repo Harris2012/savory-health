@@ -6,6 +6,7 @@ var route = function ($stateProvider, $urlRouterProvider) {
         url: '/',
         views: {
             'header': { templateUrl: 'scripts/view/view_header.html?v=' + window.releaseNo, controller: HeaderController },
+            'main-menu': { templateUrl: 'scripts/view/view_menu.html?v=' + window.releaseNo },
             'main-body': { template: '<div ui-view></div>' }
         }
     });
