@@ -5,24 +5,39 @@
 
 <div class="form-group" ng-show="loading">
     <div class="col-sm-12">
-        <img src="images/loading.gif" />加载中，请稍后...
+        <img src="images/loading.gif"/>加载中，请稍后...
     </div>
 </div>
-<table class="table" ng-show="!loading">
-    <thead>
-    <tr>
-        <th>threadId</th>
-        <th>threadName</th>
-        <th>threadState</th>
-        <th>threadCpuTime</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="item in threadInfoList">
-        <td>{{item.threadId}}</td>
-        <td>{{item.threadName}}</td>
-        <td>{{item.threadState}}</td>
-        <td>{{item.threadCpuTime}}</td>
-    </tr>
-    </tbody>
-</table>
+<div class="row" ng-show="!loading">
+
+    <div class="col-sm-8">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>编号</th>
+                <th>名称</th>
+                <th>状态</th>
+                <th>CPU时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in threadInfoList">
+                <td>{{item.threadId}}</td>
+                <td>{{item.threadName}}</td>
+                <td>{{item.threadState}}</td>
+                <td>{{item.threadCpuTime}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-sm-4">
+        <p>Thread: {{threadCount}}</p>
+        <p>Daemon Thread: {{daemonThreadCount}}</p>
+        <p>Runnable: {{stateMap_RUNNABLE}}</p>
+        <p>Time Waiting: {{stateMap_TIMED_WAITING}}</p>
+        <p>Waiting: {{stateMap_WAITING}}</p>
+    </div>
+
+</div>
+

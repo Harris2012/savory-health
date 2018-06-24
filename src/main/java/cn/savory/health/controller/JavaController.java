@@ -3,11 +3,9 @@ package cn.savory.health.controller;
 import cn.savory.health.controller.request.*;
 import cn.savory.health.controller.response.*;
 import cn.savory.health.controller.vo.ThreadInfoVo;
-import cn.savory.health.core.jmonitor.JMConnBean;
 import cn.savory.health.core.jmonitor.JMConnManager;
 import com.google.common.collect.Lists;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -17,7 +15,10 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -183,8 +184,6 @@ public class JavaController extends ControllerBase {
     private HeapDumpResponse heapDump(HeapDumpRequest request, HttpServletRequest httpServletRequest) throws IOException {
 
         HeapDumpResponse response = new HeapDumpResponse();
-
-        JMConnBean bean = JMConnManager.getApps().get("jmonitor");
 
         DateFormat fmt = DateFormat.getDateTimeInstance();
         String date = fmt.format(new Date()).replaceAll("\\D", "_");
