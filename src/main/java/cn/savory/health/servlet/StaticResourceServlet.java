@@ -46,7 +46,6 @@ public class StaticResourceServlet extends HttpServlet {
         String path = "/static" + servletPath.substring(7);
         InputStream inputStream = StaticResourceServlet.class.getClassLoader().getResourceAsStream(path);
         if (inputStream != null) {
-            System.out.println("found = " + path);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(4096);
             byte[] buffer = new byte[4096];
             int length = 0;
