@@ -3,6 +3,7 @@ package cn.savory.health.servlet;
 import cn.savory.health.servlet.api.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,8 @@ import java.nio.charset.Charset;
  * @date 2018/6/20.
  */
 public class ApiServlet extends HttpServlet {
+
+    private final static int PREFIX_LENGTH = "/health/api".length();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,7 +44,7 @@ public class ApiServlet extends HttpServlet {
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException, InstantiationException, ServletException {
 
-        String path = request.getServletPath().substring(11);
+        String path = request.getServletPath().substring(PREFIX_LENGTH);
 
         switch (path.toLowerCase()) {
             case "/user/profile": {
