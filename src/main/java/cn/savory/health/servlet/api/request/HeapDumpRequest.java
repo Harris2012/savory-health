@@ -1,4 +1,4 @@
-package cn.savory.health.controller.request;
+package cn.savory.health.servlet.api.request;
 
 /**
  * @author hc_zhang

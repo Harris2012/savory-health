@@ -1,4 +1,4 @@
-package cn.savory.health.controller.response;
+package cn.savory.health.servlet.api.response;
 
 import java.util.List;
 

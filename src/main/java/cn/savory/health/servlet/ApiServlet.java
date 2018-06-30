@@ -1,7 +1,6 @@
 package cn.savory.health.servlet;
 
-import cn.savory.health.controller.JavaController;
-import cn.savory.health.controller.UserController;
+import cn.savory.health.servlet.api.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,17 +16,6 @@ import java.nio.charset.Charset;
  * @date 2018/6/20.
  */
 public class ApiServlet extends HttpServlet {
-
-    private final static Gson GSON = new GsonBuilder().create();
-    private final static Charset CHARSET = Charset.forName("UTF-8");
-
-    private UserController userController;
-    private JavaController javaController;
-
-    public ApiServlet() {
-        userController = new UserController();
-        javaController = new JavaController();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -51,43 +39,43 @@ public class ApiServlet extends HttpServlet {
         }
     }
 
-    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException, InstantiationException {
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException, InstantiationException, ServletException {
 
         String path = request.getServletPath().substring(11);
 
         switch (path.toLowerCase()) {
             case "/user/profile": {
-                userController.profile(request, response);
+                UserProfileServlet.class.newInstance().service(request, response);
             }
             break;
 
             case "/java/checkdeadlock": {
-                javaController.checkDeadLock(request, response);
+                JavaCheckDeadLockServlet.class.newInstance().service(request, response);
             }
             break;
 
             case "/java/loadthreadinfo": {
-                javaController.loadThreadInfo(request, response);
+                JavaLoadRuntimeInfoServlet.class.newInstance().service(request, response);
             }
             break;
 
             case "/java/dumpthread": {
-                javaController.dumpThread(request, response);
+                JavaDumpThreadServlet.class.newInstance().service(request, response);
             }
             break;
 
             case "/java/loadruntimeinfo": {
-                javaController.loadRuntimeInfo(request, response);
+                JavaLoadRuntimeInfoServlet.class.newInstance().service(request, response);
             }
             break;
 
             case "/java/gc": {
-                javaController.gc(request, response);
+                JavaGCServlet.class.newInstance().service(request, response);
             }
             break;
 
             case "/java/heapdump": {
-                javaController.heapDump(request, response);
+                JavaHeapDumpServlet.class.newInstance().service(request, response);
             }
             break;
 

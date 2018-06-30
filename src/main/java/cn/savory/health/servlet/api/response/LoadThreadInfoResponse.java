@@ -1,6 +1,6 @@
-package cn.savory.health.controller.response;
+package cn.savory.health.servlet.api.response;
 
-import cn.savory.health.controller.vo.ThreadInfoVo;
+import cn.savory.health.vo.ThreadInfoVo;
 
 import java.util.HashMap;
 import java.util.List;

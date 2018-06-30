@@ -1,4 +1,4 @@
-package cn.savory.health.controller.vo;
+package cn.savory.health.vo;
 
 public class ThreadInfoVo {
 
